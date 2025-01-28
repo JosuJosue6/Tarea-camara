@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "miAppVehiculos",
+    "slug": "miAppVehiculos",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/splash/splash.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "debuggable": true,
+      "package": "com.dm.appvehiculos"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-sqlite"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "63307cfa-e879-4042-b5fc-efb32d87df62"
+      }
+    }
+  }
+}
