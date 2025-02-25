@@ -31,17 +31,11 @@ const NuevoVehiculoPantalla = ({ navigation }) => {
             return;
         }
 
-        let imagePath = null;
+        let base64Image = null;
         if (image) {
-            const fileName = image.split('/').pop();
-            const newPath = `${FileSystem.documentDirectory}vehiculos/${fileName}`;
-            await FileSystem.makeDirectoryAsync(`${FileSystem.documentDirectory}vehiculos`, { intermediates: true });
-            await FileSystem.moveAsync({
-                from: image,
-                to: newPath,
-            });
-            imagePath = newPath;
-            console.log("Image saved to:", imagePath); // Print the image path to the console
+            const fileInfo = await FileSystem.readAsStringAsync(image, { encoding: FileSystem.EncodingType.Base64 });
+            base64Image = fileInfo;
+            console.log("Image converted to Base64"); // Print the Base64 string to the console
         }
 
         const vehiculo = {
@@ -51,7 +45,7 @@ const NuevoVehiculoPantalla = ({ navigation }) => {
             color: color,
             costo: parseFloat(costo),
             activo: activo,
-            image: imagePath
+            image: base64Image
         };
 
         console.log("Vehicle data to be saved:", vehiculo); // Print the vehicle data to the console

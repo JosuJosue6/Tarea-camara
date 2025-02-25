@@ -73,8 +73,8 @@ const VehiculosPantalla = ({ navigation }) => {
     const renderItem = ({ item }) => (
         <View style={styles.itemContainer}>
             {item.image && (
-                <TouchableOpacity onPress={() => handleImagePress(item.image)}>
-                    <Image source={{ uri: item.image }} style={styles.image} />
+                <TouchableOpacity onPress={() => handleImagePress(`data:image/jpeg;base64,${item.image}`)}>
+                    <Image source={{ uri: `data:image/jpeg;base64,${item.image}` }} style={styles.image} />
                 </TouchableOpacity>
             )}
             <View style={styles.infoContainer}>
