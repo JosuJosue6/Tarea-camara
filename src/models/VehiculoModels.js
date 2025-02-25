@@ -8,7 +8,7 @@ export const insertVehicle = async (db, placa, marca, fecFabricacion, color, cos
         await db.runAsync(`
             INSERT INTO vehicles (placa, marca, fecFabricacion, color, costo, activo, image)
             VALUES (?, ?, ?, ?, ?, ?, ?)`, [placa, marca, fecFabricacion, color, costo, activo, imagePath]);
-        console.log('Vehicle added successfully *******', [placa, marca, fecFabricacion, color, costo, activo, imagePath]);
+        //console.log('Vehicle added successfully *******', [placa, marca, fecFabricacion, color, costo, activo, imagePath]);
     } catch (error) {
         console.error('Error adding vehicle:', error);
     }

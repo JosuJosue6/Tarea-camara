@@ -1,6 +1,6 @@
-import { launchImageLibrary } from 'react-native-image-picker';
+import NetInfo from '@react-native-community/netinfo';
+import axios from 'axios';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
-import { Buffer } from 'buffer';
 
 // Initialize the database and create the table if it doesn't exist
 export const initializeDatabase = async (db) => {
@@ -47,12 +47,48 @@ export const pickImageAndSaveToDatabase = async (db) => {
             console.log('ImagePicker Error: ', response.error);
         } else {
             const base64Image = response.assets[0].base64;
+            const vehicle = {
+                placa: 'ABC-1234',
+                marca: 'Toyota',
+                fecFabricacion: '2022-01-01',
+                color: 'Blanco',
+                costo: 20000,
+                activo: true,
+                image: base64Image
+            };
+
             try {
-                await db.execAsync(`INSERT INTO vehicles (image) VALUES (?)`, [base64Image]);
-                console.log('Image saved to database');
+                const state = await NetInfo.fetch();
+                if (state.isConnected) {
+                    // Save to AWS
+                    await axios.post('https://3b7f-104-199-173-152.ngrok-free.app/vehiculos', vehicle);
+                    console.log('Image saved to AWS');
+                } else {
+                    // Save to local database
+                    await db.execAsync(`INSERT INTO vehicles (placa, marca, fecFabricacion, color, costo, activo, image) VALUES (?, ?, ?, ?, ?, ?, ?)`, 
+                        [vehicle.placa, vehicle.marca, vehicle.fecFabricacion, vehicle.color, vehicle.costo, vehicle.activo, vehicle.image]);
+                    console.log('Image saved to local database');
+                }
             } catch (error) {
-                console.log('Error saving image to database: ', error);
+                console.log('Error saving image:', error);
             }
         }
     });
+};
+
+// Function to sync local data with AWS
+export const syncLocalDataWithAWS = async (db) => {
+    try {
+        const state = await NetInfo.fetch();
+        if (state.isConnected) {
+            const localVehicles = await db.getAllAsync("SELECT * FROM vehicles");
+            for (const vehicle of localVehicles) {
+                await axios.post('https://3b7f-104-199-173-152.ngrok-free.app/vehiculos', vehicle);
+                await db.execAsync("DELETE FROM vehicles WHERE id = ?", [vehicle.id]);
+            }
+            console.log('Local data synced with AWS');
+        }
+    } catch (error) {
+        console.log('Error syncing data with AWS:', error);
+    }
 };

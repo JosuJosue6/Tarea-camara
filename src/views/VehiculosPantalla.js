@@ -15,7 +15,7 @@ const VehiculosPantalla = ({ navigation }) => {
     const fetchVehiculos = async () => {
         try {
             const allRows = await db.getAllAsync("SELECT * FROM vehicles");
-            console.log("Lista de vehículos", allRows);
+            //console.log("Lista de vehículos", allRows);
             setVehiculos(allRows);
         } catch (error) {
             console.log("Error while loading vehicles:", error);
